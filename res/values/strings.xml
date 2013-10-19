@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Werewolf</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="verifyPassword">Verify Password</string>
+    <string name="welcomeText">Welcome to Werewolf!</string>
+    <string name="instructionText">Please login, or register below</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="register">Register</string>
+    <string name="registerHint">New to Werewolf? Register Now - It\'s Free!</string>
+	<string name="registerIntro">Just fill out the fields below to register for a Werewolf account</string>
+    <string name="retypePassword">Retype Password</string>
+    <string name="email">Email Address</string>
+	
+</resources>
