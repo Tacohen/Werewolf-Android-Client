@@ -15,5 +15,6 @@
 	<string name="registerIntro">Just fill out the fields below to register for a Werewolf account</string>
     <string name="retypePassword">Retype Password</string>
     <string name="email">Email Address</string>
+    <string name="validatingText">Communicating with Server&#8230;Please be Patient</string>
 	
 </resources>
