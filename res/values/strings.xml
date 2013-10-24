@@ -16,5 +16,5 @@
     <string name="retypePassword">Retype Password</string>
     <string name="email">Email Address</string>
     <string name="validatingText">Communicating with Server&#8230;Please be Patient</string>
-	
+	<color name="orange">#ffa500</color>
 </resources>
