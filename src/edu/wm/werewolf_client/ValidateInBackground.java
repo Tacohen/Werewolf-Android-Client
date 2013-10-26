@@ -1,9 +1,11 @@
 package edu.wm.werewolf_client;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
@@ -13,43 +15,28 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
+import android.os.AsyncTask;
 import android.util.Log;
 
-public class ServerRegistration extends Activity{
-	
-	String TAG = "ServerRegistration";
-	Context context;
+public class ValidateInBackground extends AsyncTask<String, Void, Boolean> {
+
+	String TAG = "ValidateInBackground";
 	
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_validate);
+	protected Boolean doInBackground(String... usernameAndPassword) {
 		
-		context = getApplicationContext();
-		
-		Bundle b = this.getIntent().getExtras();
-		String username = b.getString("username");
-		String password = b.getString("password");
-		
-		Log.i(TAG,"Username is: "+username);
-		Log.i(TAG, "password is: "+password);
-		
-	}
-	
-	public void postData() {
-	    // Create a new HttpClient and Post Header
+		String username = usernameAndPassword[0];
+		String password = usernameAndPassword[1];
+
+		// Create a new HttpClient and Post Header
 	    HttpClient httpclient = new DefaultHttpClient();
-	    HttpPost httppost = new HttpPost("http://www.yoursite.com/script.php");
+	    HttpPost httppost = new HttpPost("http://powerful-depths-2851.herokuapp.com/users/login");
 
 	    try {
 	        // Add your data
 	        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-	        nameValuePairs.add(new BasicNameValuePair("id", "12345"));
-	        nameValuePairs.add(new BasicNameValuePair("stringdata", "AndDev is Cool!"));
+	        nameValuePairs.add(new BasicNameValuePair("username", username));
+	        nameValuePairs.add(new BasicNameValuePair("password", password));
 	        httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 
 	        // Execute HTTP Post Request
@@ -57,11 +44,14 @@ public class ServerRegistration extends Activity{
 	        
 	    } catch (ClientProtocolException e) {
 	        Log.e(TAG,"Client Protocol Exception!");
+	        return false;
 	    } catch (IOException e) {
 	    	Log.e(TAG,"IO Exception!");
+	    	return false;
 	    }
-	    
-	    
-	} 
+		
+	    Log.v(TAG, "Logged in!");
+	    return true;
+	}
 
 }

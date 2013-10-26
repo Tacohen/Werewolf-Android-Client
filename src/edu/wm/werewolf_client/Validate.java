@@ -2,16 +2,22 @@ package edu.wm.werewolf_client;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -39,28 +45,19 @@ public class Validate extends Activity{
 
 	private void connectToServer(String username, String password) {
 		
-
-		// Making HTTP request
-	    try {
-	    	
-	    	String url = "http://powerful-depths-2851.herokuapp.com/users/login";
-
-	        // defaultHttpClient
-	        DefaultHttpClient httpClient = new DefaultHttpClient();
-	        HttpPost httpPost = new HttpPost(url);
-	        //httpPost.setEntity(new UrlEncodedFormEntity(params));
-
-	        HttpResponse httpResponse = httpClient.execute(httpPost);
-	        HttpEntity httpEntity = httpResponse.getEntity();
-	        //is = httpEntity.getContent();
-
-	    } catch (UnsupportedEncodingException e) {
-	        e.printStackTrace();
-	    } catch (ClientProtocolException e) {
-	        e.printStackTrace();
-	    } catch (IOException e) {
-	        e.printStackTrace();
-	    }
+		String [] usernameAndPassword = new String [2];
+		
+		usernameAndPassword[0] = username;
+		usernameAndPassword[1] = password;
+		
+		new ValidateInBackground().execute(usernameAndPassword);
+		
+		Intent playIntent = new Intent(Validate.this,Play.class);
+		Bundle b = new Bundle();
+		b.putString("username", username);
+		b.putString("password",password);
+		playIntent.putExtras(b);
+		startActivityForResult(playIntent, 0);
 		
 	}
 
