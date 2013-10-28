@@ -23,6 +23,8 @@ public class ServerRegistration extends Activity{
 	
 	String TAG = "ServerRegistration";
 	Context context;
+	String username;
+	String password;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -32,8 +34,8 @@ public class ServerRegistration extends Activity{
 		context = getApplicationContext();
 		
 		Bundle b = this.getIntent().getExtras();
-		String username = b.getString("username");
-		String password = b.getString("password");
+		username = b.getString("username");
+		password = b.getString("password");
 		
 		Log.i(TAG,"Username is: "+username);
 		Log.i(TAG, "password is: "+password);
@@ -60,7 +62,12 @@ public class ServerRegistration extends Activity{
 	    } catch (IOException e) {
 	    	Log.e(TAG,"IO Exception!");
 	    }
-	    
+	    Intent playIntent = new Intent(ServerRegistration.this,Play.class);
+		Bundle b = new Bundle();
+		b.putString("username", username);
+		b.putString("password",password);
+		playIntent.putExtras(b);
+		startActivityForResult(playIntent, 0);
 	    
 	} 
 

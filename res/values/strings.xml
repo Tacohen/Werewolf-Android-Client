@@ -17,4 +17,7 @@
     <string name="email">Email Address</string>
     <string name="validatingText">Communicating with Server&#8230;Please be Patient</string>
 	<color name="orange">#ffa500</color>
+	<string name="stats">Your Statistics: </string>
+	<string name="placeholder">No Data Available</string>
+	
 </resources>
