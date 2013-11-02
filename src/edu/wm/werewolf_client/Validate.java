@@ -21,6 +21,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.loopj.android.http.*;
+
 public class Validate extends Activity{
 	
 	Context context;
@@ -50,15 +52,14 @@ public class Validate extends Activity{
 		usernameAndPassword[0] = username;
 		usernameAndPassword[1] = password;
 		
-		new ValidateInBackground().execute(usernameAndPassword);
 		
-		Intent playIntent = new Intent(Validate.this,Play.class);
-		Bundle b = new Bundle();
-		b.putString("username", username);
-		b.putString("password",password);
-		playIntent.putExtras(b);
-		startActivityForResult(playIntent, 0);
-		
+		AsyncHttpClient client = new AsyncHttpClient();
+		client.get("http://www.google.com", new AsyncHttpResponseHandler() {
+		    @Override
+		    public void onSuccess(String response) {
+		        System.out.println(response);
+		    }
+		});
 	}
 
 }
