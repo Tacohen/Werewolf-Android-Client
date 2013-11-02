@@ -10,6 +10,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.loopj.android.http.*;
+
 public class Register extends Activity{
 	
 	Context context;
@@ -69,6 +71,7 @@ public class Register extends Activity{
 							toast.show();
 						}
 						else{
+							/**
 							Intent registerIntent = new Intent(Register.this,ServerRegistration.class);
 							Bundle b = new Bundle();
 							b.putString("username", username);
@@ -76,6 +79,39 @@ public class Register extends Activity{
 							b.putString("email", email);
 							registerIntent.putExtras(b);
 							startActivityForResult(registerIntent, 0);	
+							*/
+							Log.i(TAG, "About to post new registration to server");
+							AsyncHttpClient client = new AsyncHttpClient();
+							client.setBasicAuth(username,password);
+							RequestParams params = new RequestParams();
+							params.put("username", username);
+							params.put("password", password);
+							client.post("http://powerful-depths-2851.herokuapp.com/users/login", params, new AsyncHttpResponseHandler() {
+							    @Override
+							    public void onSuccess(String response) {
+							        System.out.println("Response is: "+response);
+							        Intent playIntent = new Intent(Register.this,Play.class);
+									Bundle b = new Bundle();
+									b.putString("username", username);
+									b.putString("password",password);
+									playIntent.putExtras(b);
+									startActivityForResult(playIntent, 0);
+							    }
+							    @Override
+							    public void onFailure(int statusCode,
+					                    org.apache.http.Header[] headers,
+					                    byte[] binaryData,
+					                    java.lang.Throwable error){
+							        Log.w(TAG,"HTTP Post failure!");
+							    	Toast toast = Toast.makeText(context, "Something went wrong, please login again", Toast.LENGTH_LONG);
+									toast.show();
+									Intent mainIntent = new Intent(Register.this,MainActivity.class);
+									startActivityForResult(mainIntent, 0);
+							    }
+									    
+							});
+							
+						}
 						}
 					}
 						
@@ -84,7 +120,7 @@ public class Register extends Activity{
 			}
 			
 			
-		}
-	};
+		};
+
 
 }

@@ -1,25 +1,11 @@
 package edu.wm.werewolf_client;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.loopj.android.http.*;
 
@@ -45,7 +31,7 @@ public class Validate extends Activity{
 		connectToServer(username,password);
 	}
 
-	private void connectToServer(String username, String password) {
+	private void connectToServer(final String username, final String password) {
 		
 		String [] usernameAndPassword = new String [2];
 		
@@ -54,12 +40,35 @@ public class Validate extends Activity{
 		
 		
 		AsyncHttpClient client = new AsyncHttpClient();
-		client.get("http://www.google.com", new AsyncHttpResponseHandler() {
+		client.setBasicAuth(username,password);
+		RequestParams params = new RequestParams();
+		params.put("username", username);
+		params.put("password", password);
+		client.post("http://powerful-depths-2851.herokuapp.com/users/login", params, new AsyncHttpResponseHandler() {
 		    @Override
 		    public void onSuccess(String response) {
-		        System.out.println(response);
+		        System.out.println("Response is: "+response);
+		        Intent playIntent = new Intent(Validate.this,Play.class);
+				Bundle b = new Bundle();
+				b.putString("username", username);
+				b.putString("password",password);
+				playIntent.putExtras(b);
+				startActivityForResult(playIntent, 0);
 		    }
+		    @Override
+		    public void onFailure(int statusCode,
+                    org.apache.http.Header[] headers,
+                    byte[] binaryData,
+                    java.lang.Throwable error){
+		        Log.w(TAG,"HTTP Post failure!");
+		    	Toast toast = Toast.makeText(context, "Something went wrong, please login again", Toast.LENGTH_LONG);
+				toast.show();
+				Intent mainIntent = new Intent(Validate.this,MainActivity.class);
+				startActivityForResult(mainIntent, 0);
+		    }
+				    
 		});
+		
 	}
 
 }
