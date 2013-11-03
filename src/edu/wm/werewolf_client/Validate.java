@@ -13,6 +13,8 @@ public class Validate extends Activity{
 	
 	Context context;
 	String TAG = "Validate";
+	String username = UsernameAndPassword.getUsername();
+	String password = UsernameAndPassword.getPassword();
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -21,17 +23,17 @@ public class Validate extends Activity{
 		
 		context = getApplicationContext();
 		
-		Bundle b = this.getIntent().getExtras();
-		String username = b.getString("username");
-		String password = b.getString("password");
+		//Bundle b = this.getIntent().getExtras();
+		//String username = b.getString("username");
+		//String password = b.getString("password");
 		
 		Log.i(TAG,"Username is: "+username);
 		Log.i(TAG, "password is: "+password);
 		
-		connectToServer(username,password);
+		connectToServer();
 	}
 
-	private void connectToServer(final String username, final String password) {
+	private void connectToServer() {
 		
 		String [] usernameAndPassword = new String [2];
 		

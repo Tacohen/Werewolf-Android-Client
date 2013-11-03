@@ -37,10 +37,12 @@ public class Register extends Activity{
 		public void onClick(View v) {
 			final EditText usernameText = (EditText) findViewById(R.id.usernameTextEditRegister);
 			username = usernameText.getText().toString();
+			UsernameAndPassword.setUsername(username);
 			Log.i(TAG, "Username is : "+username);
 			
 			final EditText passwordText = (EditText) findViewById(R.id.passwordTextEditRegister);
 			password = passwordText.getText().toString();
+			UsernameAndPassword.setPassword(password);
 			Log.i(TAG, "Password is : "+password);
 			
 			final EditText passwordRetypedText = (EditText) findViewById(R.id.passwordTextEditRetype);
@@ -71,15 +73,7 @@ public class Register extends Activity{
 							toast.show();
 						}
 						else{
-							/**
-							Intent registerIntent = new Intent(Register.this,ServerRegistration.class);
-							Bundle b = new Bundle();
-							b.putString("username", username);
-							b.putString("password",password);
-							b.putString("email", email);
-							registerIntent.putExtras(b);
-							startActivityForResult(registerIntent, 0);	
-							*/
+
 							Log.i(TAG, "About to post new registration to server");
 							AsyncHttpClient client = new AsyncHttpClient();
 							client.setBasicAuth(username,password);
@@ -91,10 +85,6 @@ public class Register extends Activity{
 							    public void onSuccess(String response) {
 							        System.out.println("Response is: "+response);
 							        Intent playIntent = new Intent(Register.this,Play.class);
-									Bundle b = new Bundle();
-									b.putString("username", username);
-									b.putString("password",password);
-									playIntent.putExtras(b);
 									startActivityForResult(playIntent, 0);
 							    }
 							    @Override

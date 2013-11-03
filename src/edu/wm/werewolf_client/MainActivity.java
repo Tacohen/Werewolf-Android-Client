@@ -45,10 +45,12 @@ public class MainActivity extends Activity {
 			
 			final EditText usernameText = (EditText) findViewById(R.id.usernameTextEdit);
 			username = usernameText.getText().toString();
+			UsernameAndPassword.setUsername(username);
 			Log.i(TAG, "Username is :"+username);
 			
 			final EditText passwordText = (EditText) findViewById(R.id.passwordTextEdit);
 			password = passwordText.getText().toString();
+			UsernameAndPassword.setPassword(password);
 			Log.i(TAG, "Password is :"+password);
 			
 			if (username.isEmpty()){
@@ -62,10 +64,6 @@ public class MainActivity extends Activity {
 				}
 				else{
 					Intent validateIntent = new Intent(MainActivity.this,Validate.class);
-					Bundle b = new Bundle();
-					b.putString("username", username);
-					b.putString("password",password);
-					validateIntent.putExtras(b);
 					startActivityForResult(validateIntent, 0);
 				}
 
