@@ -30,6 +30,8 @@ public class GetAllAlive extends AsyncTask<String, Void, ArrayList<String>>{
 	    HttpClient httpclient = new DefaultHttpClient();
 	    HttpPost httppost = new HttpPost("http://powerful-depths-2851.herokuapp.com/players/alive");
 	    Log.i(TAG,"Trying to set up HTTP POST!");
+	    httppost.setHeader("Content-Type","application/json");
+	    
 	    try {
 	        // Add your data
 	        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);

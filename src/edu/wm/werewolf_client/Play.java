@@ -50,7 +50,10 @@ public class Play extends Activity{
 			Log.e(TAG, "Interrupted in getting all alive players");
 		}
 		if (livingPlayers.contains(username)){
-			
+			Log.i(TAG, "In living players!");
+		}
+		else{
+			Log.i(TAG, "Not in living players!");
 		}
 		
 	}
