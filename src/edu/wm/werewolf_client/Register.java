@@ -1,5 +1,16 @@
 package edu.wm.werewolf_client;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.StatusLine;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicHeader;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -15,7 +26,7 @@ import com.loopj.android.http.*;
 public class Register extends Activity{
 	
 	Context context;
-	String TAG = "Register";
+	static String TAG = "Register";
 	String username;
 	String password;
 	String passwordRetyped;
@@ -73,33 +84,17 @@ public class Register extends Activity{
 							toast.show();
 						}
 						else{
-
+							
 							Log.i(TAG, "About to post new registration to server");
-							AsyncHttpClient client = new AsyncHttpClient();
-							client.setBasicAuth(username,password);
-							RequestParams params = new RequestParams();
-							params.put("username", username);
-							params.put("password", password);
-							client.post("http://powerful-depths-2851.herokuapp.com/users/login", params, new AsyncHttpResponseHandler() {
-							    @Override
-							    public void onSuccess(String response) {
-							        System.out.println("Response is: "+response);
-							        Intent playIntent = new Intent(Register.this,Play.class);
-									startActivityForResult(playIntent, 0);
-							    }
-							    @Override
-							    public void onFailure(int statusCode,
-					                    org.apache.http.Header[] headers,
-					                    byte[] binaryData,
-					                    java.lang.Throwable error){
-							        Log.w(TAG,"HTTP Post failure!");
-							    	Toast toast = Toast.makeText(context, "Something went wrong, please login again", Toast.LENGTH_LONG);
-									toast.show();
-									Intent mainIntent = new Intent(Register.this,MainActivity.class);
-									startActivityForResult(mainIntent, 0);
-							    }
-									    
-							});
+							
+							new Thread(new Runnable() {
+
+					            @Override
+					            public void run() {
+					            	makeRequest("http://powerful-depths-2851.herokuapp.com/users/register?username=",username,password);
+					            }
+					        }).start();
+							
 							
 						}
 						}
@@ -111,6 +106,29 @@ public class Register extends Activity{
 			
 			
 		};
+		
+		
+		public static HttpResponse makeRequest(String uri, String username, String password) {
+		    try {
+		    	//tacohen note: login should be something like: /users/login?username=admin&lat=31&lng=30&password=123
+
+		    	HttpClient client = new DefaultHttpClient();
+		    	uri = uri+username+"&lat="+25+"&lng="+20+"&password="+password;
+		        HttpPost httpPost = new HttpPost(uri);
+		        httpPost.setHeader(new BasicHeader("Content-type", "application/json"));
+		        HttpResponse response = client.execute(httpPost);
+		        Log.i(TAG, "URI is: "+httpPost.getURI());
+		        StatusLine statusLine = response.getStatusLine();
+		        Log.i(TAG, "HTTP response code was: "+statusLine.toString());
+		    } catch (UnsupportedEncodingException e) {
+		        e.printStackTrace();
+		    } catch (ClientProtocolException e) {
+		        e.printStackTrace();
+		    } catch (IOException e) {
+		        e.printStackTrace();
+		    }
+		    return null;
+		}
 
 
 }

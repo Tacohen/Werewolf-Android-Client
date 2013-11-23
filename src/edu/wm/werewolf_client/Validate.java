@@ -65,24 +65,12 @@ public class Validate extends Activity{
 
             @Override
             public void run() {
-            	sendJson(username,password);
+            	makeRequest("http://powerful-depths-2851.herokuapp.com/users/login?username=",username,password);
             }
         }).start();
 		
 	}
 	
-	
-	public static void sendJson(String username, String password) {
-	    //Map<String, Object> param = new HashMap<String, Object>();
-	    //param.put("username", username);
-	    //param.put("password", 123);
-	    //param.put("lat", 25);
-	    //param.put("lng", 26);
-	    
-	    //String json = new GsonBuilder().create().toJson(param, Map.class);
-	    //Log.i(TAG,"JSON is: "+json);
-	    makeRequest("http://powerful-depths-2851.herokuapp.com/users/login?username=", username, password);
-	}
 
 	public static HttpResponse makeRequest(String uri, String username, String password) {
 	    try {
@@ -91,10 +79,6 @@ public class Validate extends Activity{
 	    	HttpClient client = new DefaultHttpClient();
 	    	uri = uri+username+"&lat="+25+"&lng="+20+"&password="+123;
 	        HttpPost httpPost = new HttpPost(uri);
-	        //httpPost.setEntity(new StringEntity(json));
-	        //String urlJson = URLEncoder.encode(json,"UTF-8");
-	        //Log.i(TAG, "urlJson is: "+urlJson);
-	        //httpPost.setHeader("Accept-Encoding", "application/json");
 	        httpPost.setHeader(new BasicHeader("Content-type", "application/json"));
 	        HttpResponse response = client.execute(httpPost);
 	        Log.i(TAG, "URI is: "+httpPost.getURI());
@@ -109,148 +93,7 @@ public class Validate extends Activity{
 	    }
 	    return null;
 	}
-		/**
-		JSONObject jsonParams = new JSONObject();
-		try {
-			jsonParams.put("username", username);
-		} catch (JSONException e) {
-			Log.e(TAG,"JSON put error!");
-		}
-        try {
-			jsonParams.put("password", password);
-		} catch (JSONException e) {
-			Log.e(TAG,"JSON put error!");
-		}
-        try {
-			jsonParams.put("lat", lat);
-		} catch (JSONException e) {
-			Log.e(TAG,"JSON put error!");;
-		}
-        try {
-			jsonParams.put("lng", lng);
-		} catch (JSONException e) {
-			Log.e(TAG,"JSON put error!");
-		}
-		
-		params.put("username", username);
-		params.put("password", password);
-		params.put("lat", lat);
-		params.put("lng", lng);
-        //StringEntity entity = null;
-        //try {
-		//	entity = new StringEntity(jsonParams.toString());
-		//} catch (UnsupportedEncodingException e) {
-		//	Log.e(TAG,"JSON toString() error!");
-		//}
-        //Log.i(TAG, "Request is: "+client.toString());
-		client.addHeader(HTTP.CONTENT_TYPE, "application/json");
-		client.post("http://powerful-depths-2851.herokuapp.com/users/login", params, new AsyncHttpResponseHandler() {
-        //client.post(context, "http://powerful-depths-2851.herokuapp.com/users/login", entity, "application/json",new AsyncHttpResponseHandler(){   
-        	@Override
-		    public void onSuccess(String response) {
-		        System.out.println("Sent login request, response is: "+response);
-		    }
-		    @Override
-		    public void onFailure(int statusCode,
-                    org.apache.http.Header[] headers,
-                    byte[] binaryData,
-                    java.lang.Throwable error){
-		        Log.w(TAG,"HTTP Post failure!");
 
-		    }
-				    
-		});
-	}*/
-	/**
-
-		protected void sendJson (final String username, final String password) {
-			
-			String [] usernameAndPassword = new String [2];
-			
-			usernameAndPassword[0] = username;
-			usernameAndPassword[1] = password;
-			
-	        Thread t = new Thread() {
-
-	            public void run() {
-	                Looper.prepare(); //For Preparing Message Pool for the child Thread
-	                HttpClient client = new DefaultHttpClient();
-	                //HttpConnectionParams.setConnectionTimeout(client.getParams(), 10000); //Timeout Limit
-	                HttpResponse response;
-	                JSONObject json = new JSONObject();
-
-	                try {
-	                	double lat = 30.0;
-	                	double lng = 31.0;
-	                    HttpPost post = new HttpPost("http://powerful-depths-2851.herokuapp.com/users/login");
-	                    //post.setHeader("Content-type", "application/json");
-	                    //post.setHeader("Accept", "application/json");
-	                    json.accumulate("username", username);
-	                    json.accumulate("password", password);
-	                    json.accumulate("lat", lat);
-	                    json.accumulate("lng", lng);
-	                    StringEntity se = new StringEntity(json.toString(), "utf-8");  
-	                    Log.i(TAG, "JSON is: "+json.toString());
-	                    //se.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
-	                    post.setEntity(se);
-	                    //post.setHeader("Accept", "application/json");
-	                    post.setHeader("Content-type", "application/json");
-	                    response = client.execute(post);
-	                    Log.i(TAG, "POST is: "+post.toString());
-
-	                    /*Checking response 
-	                    if(response!=null){
-	                        InputStream in = response.getEntity().getContent(); //Get the data in the entity
-	                        Log.i(TAG, "Response from server was: "+in);
-	                        
-	                    }
-
-	                } catch(Exception e) {
-	                    e.printStackTrace();
-	                    Log.e("Validate", "Cannot Estabilish Connection");
-	                }
-
-	                Looper.loop(); //Loop in the message queue
-	            }
-	        };
-
-	        t.start();      
-	    }*/
-		
-		/**
-		AsyncHttpClient client = new AsyncHttpClient();
-		client.setBasicAuth(username,password);
-		client.addHeader("Content-Type","application/json");
-		RequestParams params = new RequestParams();
-		params.put("username", username);
-		params.put("password", password);
-		params.put("lat", 30.0);//hardcoded; replace these!
-		params.put("lng", 31.0);//hardcoded; replace these!
-		client.post("http://powerful-depths-2851.herokuapp.com/users/login",  params,new AsyncHttpResponseHandler() {
-		    @Override
-		    public void onSuccess(String response) {
-		        System.out.println("Response is: "+response);
-		        Intent playIntent = new Intent(Validate.this,Play.class);
-				Bundle b = new Bundle();
-				b.putString("username", username);
-				b.putString("password",password);
-				playIntent.putExtras(b);
-				startActivityForResult(playIntent, 0);
-		    }
-		    @Override
-		    public void onFailure(int statusCode,
-                    org.apache.http.Header[] headers,
-                    byte[] binaryData,
-                    java.lang.Throwable error){
-		        Log.w(TAG,"HTTP Post failure!, Status code is: "+statusCode);
-		    	Toast toast = Toast.makeText(context, "Something went wrong, please login again", Toast.LENGTH_LONG);
-				toast.show();
-				Intent mainIntent = new Intent(Validate.this,MainActivity.class);
-				startActivityForResult(mainIntent, 0);
-		    }
-				    
-		});
-		*/
 	
 
 }
