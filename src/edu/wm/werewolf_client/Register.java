@@ -120,6 +120,7 @@ public class Register extends Activity{
 		        Log.i(TAG, "URI is: "+httpPost.getURI());
 		        StatusLine statusLine = response.getStatusLine();
 		        Log.i(TAG, "HTTP response code was: "+statusLine.toString());
+		        
 		    } catch (UnsupportedEncodingException e) {
 		        e.printStackTrace();
 		    } catch (ClientProtocolException e) {

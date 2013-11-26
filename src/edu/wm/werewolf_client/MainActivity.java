@@ -44,12 +44,12 @@ public class MainActivity extends Activity {
 		public void onClick(View v) {
 			
 			final EditText usernameText = (EditText) findViewById(R.id.usernameTextEdit);
-			username = usernameText.getText().toString();
+			username = usernameText.getText().toString().trim();
 			UsernameAndPassword.setUsername(username);
 			Log.i(TAG, "Username is :"+username);
 			
 			final EditText passwordText = (EditText) findViewById(R.id.passwordTextEdit);
-			password = passwordText.getText().toString();
+			password = passwordText.getText().toString().trim();
 			UsernameAndPassword.setPassword(password);
 			Log.i(TAG, "Password is :"+password);
 			

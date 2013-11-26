@@ -24,6 +24,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
@@ -72,18 +73,35 @@ public class Validate extends Activity{
 	}
 	
 
-	public static HttpResponse makeRequest(String uri, String username, String password) {
+	public HttpResponse makeRequest(String uri, final String username, final String password) {
 	    try {
 	    	//tacohen note: login should be something like: /users/login?username=admin&lat=31&lng=30&password=123
 
 	    	HttpClient client = new DefaultHttpClient();
-	    	uri = uri+username+"&lat="+25+"&lng="+20+"&password="+123;
+	    	uri = uri+username.trim()+"&lat="+25+"&lng="+20+"&password="+password.trim();
 	        HttpPost httpPost = new HttpPost(uri);
 	        httpPost.setHeader(new BasicHeader("Content-type", "application/json"));
 	        HttpResponse response = client.execute(httpPost);
 	        Log.i(TAG, "URI is: "+httpPost.getURI());
 	        StatusLine statusLine = response.getStatusLine();
 	        Log.i(TAG, "HTTP response code was: "+statusLine.toString());
+	        if (statusLine.toString().equals("HTTP/1.1 200 OK")){
+	        	Handler handler = new Handler(Looper.getMainLooper());
+	        	handler.post(new Runnable() {
+	        	    @Override
+	        	    public void run() {
+	        	        Intent intent = new Intent (Validate.this, Play.class);
+	        	        intent.putExtra("username", username);
+	        	        intent.putExtra("password", password);
+	        	        startActivity(intent);
+	        	    }
+	        	});
+	        	//Validate v = new Validate();
+	        	//v.MoveToPlayScreen(username);
+	        }
+	        else{
+	        	Log.e(TAG, "HTTP problem!");
+	        }
 	    } catch (UnsupportedEncodingException e) {
 	        e.printStackTrace();
 	    } catch (ClientProtocolException e) {
@@ -92,6 +110,11 @@ public class Validate extends Activity{
 	        e.printStackTrace();
 	    }
 	    return null;
+	}
+	
+	public void MoveToPlayScreen(String username){
+		Intent validateIntent = new Intent(Validate.this,Play.class);
+		startActivityForResult(validateIntent, 0);
 	}
 
 	

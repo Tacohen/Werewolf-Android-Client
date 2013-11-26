@@ -22,7 +22,7 @@ public class Play extends Activity{
 	
 	Context context;
 	Location location;
-	ArrayList<String> livingPlayers;
+	ArrayList<Player> livingPlayers;
 	String TAG = "Play";
 	Boolean isAlive;
 	
@@ -31,30 +31,40 @@ public class Play extends Activity{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_play);
 		
+		final GetAllAlive getAllAlive = new GetAllAlive();
+		
 		Bundle b = this.getIntent().getExtras();
-		String username = b.getString("username");
-		String password = b.getString("password");
+		final String username = b.getString("username");
+		final String password = b.getString("password");
 		
 		context = getApplicationContext();
 		
-		String [] usernameAndPassword = new String [2];
-		
-		usernameAndPassword[0] = username;
-		usernameAndPassword[1] = password;
-		
-		try {
-			livingPlayers = new GetAllAlive().execute(usernameAndPassword).get();
-		} catch (InterruptedException e) {
-			Log.e(TAG, "Interrupted in getting all alive players");
-		} catch (ExecutionException e) {
-			Log.e(TAG, "Interrupted in getting all alive players");
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				isAlive = getAllAlive.isSpecificPlayerAlive(username, username, password);
+				if (isAlive){
+					Log.i(TAG, username+" is alive");
+				}
+				else{
+					Log.i(TAG, username+" is not alive");
+				}
+			}
+		}).start();
+		/**
+		if (livingPlayers == null) {
+			Log.i(TAG, "Living players is null!");
 		}
-		if (livingPlayers.contains(username)){
-			Log.i(TAG, "In living players!");
+		else if (livingPlayers.isEmpty()){
+			Log.i(TAG, "Living players is empty!");
+		}
+		else if (livingPlayers.contains(username)){
+			Log.i(TAG, username+" is in living players!");
 		}
 		else{
-			Log.i(TAG, "Not in living players!");
+			Log.i(TAG, username+" is not in living players!");
 		}
+		*/
 		
 	}
 	
