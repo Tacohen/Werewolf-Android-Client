@@ -90,7 +90,7 @@ public class Validate extends Activity{
 	        	handler.post(new Runnable() {
 	        	    @Override
 	        	    public void run() {
-	        	        Intent intent = new Intent (Validate.this, Play.class);
+	        	        Intent intent = new Intent (Validate.this, MainInterface.class);
 	        	        intent.putExtra("username", username);
 	        	        intent.putExtra("password", password);
 	        	        startActivity(intent);
@@ -113,7 +113,7 @@ public class Validate extends Activity{
 	}
 	
 	public void MoveToPlayScreen(String username){
-		Intent validateIntent = new Intent(Validate.this,Play.class);
+		Intent validateIntent = new Intent(Validate.this,MainInterface.class);
 		startActivityForResult(validateIntent, 0);
 	}
 

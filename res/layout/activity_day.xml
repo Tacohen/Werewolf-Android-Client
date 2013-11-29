@@ -2,42 +2,33 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/orange"
     android:orientation="vertical" >
 
     <TextView
-        android:id="@+id/statsText"
+        android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/stats"
+        android:text="Daytime Actions"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <TextView
-        android:id="@+id/typeText"
+        android:id="@+id/voteText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/placeholder"
+        android:text="Players to Vote For"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
-    <TextView
-        android:id="@+id/isAliveText"
+    <RadioGroup
+        android:id="@+id/radiogroup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/placeholder"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:orientation="vertical">
+    </RadioGroup>
 
-    <TextView
-        android:id="@+id/isNightText"
+    <Button
+        android:id="@+id/voteButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/placeholder"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
-
-    <TextView
-        android:id="@+id/killsText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/placeholder"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:text="Vote" />
 
 </LinearLayout>
