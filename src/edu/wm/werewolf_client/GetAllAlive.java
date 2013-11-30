@@ -7,6 +7,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import org.apache.http.HttpResponse;
@@ -67,6 +68,7 @@ public class GetAllAlive {
 			}
 			Log.i(TAG, "jObj is: "+jObj);
 			JSONArray playerNames = jObj.names();
+			Log.i(TAG, "length of player names is: "+playerNames.length());
 			Log.i(TAG, "playerNames are: "+playerNames.toString(1));
 			for (int i=0; i < playerNames.length(); i++ ){
 				JSONObject o = jObj.getJSONObject(playerNames.getString(i));
@@ -77,7 +79,14 @@ public class GetAllAlive {
 
 			in.close();
 			String data = sb.toString();
+			//remove duplicates
+			HashSet<Player> hs = new HashSet<Player>();
+			hs.addAll(playersList);
+			playersList.clear();
+			playersList.addAll(hs);
+			
 			Log.i(TAG, "Players/alive result is: "+data);
+			Log.i(TAG, "playersList is : "+playersList.toString());
 
 
 

@@ -16,7 +16,6 @@ public class KillAttempt {
 	public void MakeKillAttempt(String victimName) {
 		String username = UsernameAndPassword.getUsername();
 		String password = UsernameAndPassword.getPassword();
-		Log.i(TAG, "About to post new registration to server");
 		AsyncHttpClient client = new AsyncHttpClient();
 		client.setBasicAuth(username,password);
 		RequestParams params = new RequestParams();

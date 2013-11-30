@@ -25,6 +25,7 @@ public class DayTab extends Fragment{
 	public String username;
 	public ArrayList<Player> livingPlayers = new ArrayList<Player>();
 	public Context context;
+	public Vote voteInstance; 
 
 	private final Handler myHandler = new Handler();
 	
@@ -41,7 +42,7 @@ public class DayTab extends Fragment{
 		
 		final GetAllAlive getAllAlive = new GetAllAlive();
 		final IsNight isNightInstance = new IsNight();
-		final isWerewolf isWerewolfInstance = new isWerewolf();
+		voteInstance = new Vote();
 		
 		new Thread(new Runnable() {
 			@Override
@@ -50,37 +51,6 @@ public class DayTab extends Fragment{
 				AccessUI();
 			}
 		}).start();
-	     
-	    
-		/**
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				isAlive = getAllAlive.isSpecificPlayerAlive(username, username, password);
-				if (isAlive){
-					Log.i(TAG, username+" is alive");
-				}
-				else{
-					Log.i(TAG, username+" is not alive");
-				}
-				AccessUI();
-			}
-		}).start();
-		
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				isWerewolf = isWerewolfInstance.IsWerewolf(username, password);
-				if (isWerewolf){
-					Log.i(TAG, username+" is a werewolf");
-				}
-				else{
-					Log.i(TAG, username+" is not a werewolf");
-				}
-				AccessUI();
-			}
-		}).start();
-		*/
 		
 		
 		new Thread(new Runnable() {
@@ -106,10 +76,7 @@ public class DayTab extends Fragment{
 		
 		if ((isNight == null) || (isNight)){
 			TextView isDeadText = (TextView) getView().findViewById(R.id.voteText);
-			isDeadText.setText("It is night; You cannot vote now");
-			
-			//RadioButton optionsRadio = (RadioButton) getView().findViewById(R.id.optionsRadioButton);
-			//optionsRadio.setVisibility(View.GONE);
+			isDeadText.setText("It is night. You cannot vote now");
 			
 			Button voteButton = (Button) getView().findViewById(R.id.voteButton);
 			voteButton.setVisibility(View.GONE);
@@ -119,7 +86,8 @@ public class DayTab extends Fragment{
 			isDeadText.setText("It is daytime, you can vote now");
 			
 			if (!livingPlayers.isEmpty()){
-				RadioGroup rg = (RadioGroup) getView().findViewById(R.id.radiogroup);//not this RadioGroup rg = new RadioGroup(this);
+				final RadioGroup rg = (RadioGroup) getView().findViewById(R.id.radiogroup);//not this RadioGroup rg = new RadioGroup(this);
+				rg.removeAllViews();//prevent duplicates
 				rg.setOrientation(RadioGroup.VERTICAL);
 				for(int i=0; i<livingPlayers.size(); i++)
 				{
@@ -127,6 +95,26 @@ public class DayTab extends Fragment{
 					rg.addView(rb); 
 					rb.setText(livingPlayers.get(i).getId());
 				}
+				
+				Button voteButton = (Button) getView().findViewById(R.id.voteButton);
+				voteButton.setOnClickListener(new View.OnClickListener() {
+		             public void onClick(View v) {
+		                 Log.i(TAG, "Vote Button Pressed!");
+		                 Log.i(TAG, "Result from button was: "+rg.getCheckedRadioButtonId());
+		                 // find the radiobutton by returned id
+		                 final Button selectedPlayerButton = (RadioButton) getView().findViewById(rg.getCheckedRadioButtonId());
+		                 final String selectedPlayer = selectedPlayerButton.getText().toString();
+		                 Log.i(TAG, "selected player was: "+selectedPlayer);
+		                 new Thread(new Runnable() {
+		         			@Override
+		         			public void run() {
+		         				voteInstance.vote(selectedPlayer);
+		         				Log.i(TAG, "Voted for "+selectedPlayer);
+		         			}
+		         		}).start();
+		             }
+		         });
+
 			}
 		}
 		
