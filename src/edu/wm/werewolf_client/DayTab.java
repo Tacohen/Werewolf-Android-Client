@@ -125,6 +125,7 @@ public class DayTab extends Fragment{
 	         			Button voteButton = (Button) getView().findViewById(R.id.voteButton);
 	         			voteButton.setVisibility(View.GONE);
 	         			voted = true;
+	         			
 		             }
 		         });
 

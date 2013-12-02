@@ -23,6 +23,8 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -33,12 +35,17 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.loopj.android.http.*;
 
-public class Validate extends Activity{
+import edu.wm.werewolf_client.FindLocation.LocationResult;
+
+public class Validate extends Activity {
+
 	
 	Context context;
 	static String TAG = "Validate";
 	String username = UsernameAndPassword.getUsername();
 	String password = UsernameAndPassword.getPassword();
+	public double lat = 25;//default
+	public double lng = 20;//default
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -51,12 +58,38 @@ public class Validate extends Activity{
 		//String username = b.getString("username");
 		//String password = b.getString("password");
 		
+		LocationResult locationResult = new LocationResult(){
+			@Override
+			public void gotLocation(Location location){
+
+				if (location == null){
+					//If we failed to find the location for some reason, show the user an alert dialog
+					Log.w(TAG,"failed to get location!");
+				}
+				else{
+					//Got the location!
+					double lat = (double) (location.getLatitude());
+					double lng = (double) (location.getLongitude());
+
+					Log.v(TAG,"latitude is: "+lat);
+					Log.v(TAG,"longitude is: "+lng);
+
+
+				}
+			}
+
+		};
+		FindLocation myLocation = new FindLocation();
+		myLocation.getLocation(this, locationResult);
+		
 		Log.i(TAG,"Username is: "+username);
 		Log.i(TAG, "password is: "+password);
 		
+		
+		
 		//sendJson(username,password);
-		double lat = 25.0;
-    	double lng = 20.0;
+		//double lat = 25.0;
+    	//double lng = 20.0;
 		
 		AsyncHttpClient client = new AsyncHttpClient();
 		client.setBasicAuth(username,password);

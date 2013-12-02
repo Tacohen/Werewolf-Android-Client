@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class NightTab extends Fragment{
 	 
@@ -30,6 +31,8 @@ public class NightTab extends Fragment{
 	private int kills;
 	private final Handler myHandler = new Handler();
 	
+	public KillAttempt kill;
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 		      Bundle savedInstanceState) {
@@ -42,7 +45,7 @@ public class NightTab extends Fragment{
 		final GetAllAlive getAllAlive = new GetAllAlive();
 		final IsNight isNightInstance = new IsNight();
 		final isWerewolf isWerewolfInstance = new isWerewolf();
-		final KillAttempt kill = new KillAttempt();
+		kill = new KillAttempt();
 		
 		this.context = view.getContext();
 		
@@ -139,6 +142,27 @@ public class NightTab extends Fragment{
 					rg.addView(rb); 
 					rb.setText(targets.get(i));
 				}
+				killButton.setOnClickListener(new View.OnClickListener() {
+		             public void onClick(View v) {
+		                 Log.i(TAG, "Kill Button Pressed!");
+		                 Log.i(TAG, "Result from button was: "+rg.getCheckedRadioButtonId());
+		                 // find the radiobutton by returned id
+		                 final Button selectedPlayerButton = (RadioButton) getView().findViewById(rg.getCheckedRadioButtonId());
+		                 final String selectedPlayer = selectedPlayerButton.getText().toString();
+		                 Log.i(TAG, "selected player was: "+selectedPlayer);
+		                 new Thread(new Runnable() {
+		         			@Override
+		         			public void run() {
+		         				kill.MakeKillAttempt(selectedPlayer);
+		         				Log.i(TAG, "Voted for "+selectedPlayer);
+		         			}
+		         		}).start();
+		                Toast.makeText(context, "KillMade", Toast.LENGTH_LONG).show();
+		                if (rg.getChildCount() == 0){
+		                	rg.setVisibility(View.GONE);
+		                }
+		             }
+		         });
 				
 			}
 		}

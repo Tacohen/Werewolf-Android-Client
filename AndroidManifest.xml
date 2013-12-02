@@ -8,6 +8,7 @@
         android:minSdkVersion="14"
         android:targetSdkVersion="18" />
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
@@ -18,7 +19,9 @@
 
         <activity
             android:name="edu.wm.werewolf_client.MainActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name" 
+            android:screenOrientation="landscape"
+   			android:configChanges="orientation|keyboardHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -27,7 +30,9 @@
         </activity>
         <activity
             android:name="edu.wm.werewolf_client.Stats"
-            android:label="@string/app_name" >
+            android:label="@string/app_name" 
+            android:screenOrientation="landscape"
+   			android:configChanges="orientation|keyboardHidden">
             <intent-filter>
                 <action android:name="android.intent.action.Stats" />
             </intent-filter>
@@ -35,7 +40,7 @@
         <activity
             android:name="edu.wm.werewolf_client.MainInterface"
             android:label="@string/app_name" 
-            android:screenOrientation="portrait"
+            android:screenOrientation="landscape"
    			android:configChanges="orientation|keyboardHidden">
             <intent-filter>
                 <action android:name="android.intent.action.Play" />
@@ -45,21 +50,27 @@
         </activity>
         <activity
             android:name="edu.wm.werewolf_client.Register"
-            android:label="@string/app_name" >
+            android:label="@string/app_name" 
+            android:screenOrientation="landscape"
+   			android:configChanges="orientation|keyboardHidden">
             <intent-filter>
                 <action android:name="android.intent.action.Register" />
             </intent-filter>
         </activity>
         <activity
             android:name="edu.wm.werewolf_client.Validate"
-            android:label="@string/app_name" >
+            android:label="@string/app_name" 
+            android:screenOrientation="landscape"
+   			android:configChanges="orientation|keyboardHidden">
             <intent-filter>
                 <action android:name="android.intent.action.Validate" />
             </intent-filter>
         </activity>
         <activity
             android:name="edu.wm.werewolf_client.ServerRegistration"
-            android:label="@string/app_name" >
+            android:label="@string/app_name" 
+            android:screenOrientation="landscape"
+   			android:configChanges="orientation|keyboardHidden">
             <intent-filter>
                 <action android:name="android.intent.action.ServerRegistration" />
             </intent-filter>

@@ -14,7 +14,7 @@ public class MainInterface extends Activity{
 	public void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
 	    setContentView(R.layout.activity_tabsholder);
-	    
+ 
 	    Bundle b = this.getIntent().getExtras();
 		final String username = b.getString("username");
 		final String password = b.getString("password");
@@ -54,14 +54,19 @@ public class MainInterface extends Activity{
 	    	ft.remove(fragment);
 	    }
 
-	    public void onTabSelected(Tab tab, FragmentTransaction ft) {
-	        ft.add(R.id.fragment_container, fragment, null);
-	    }
-
 	    public void onTabUnselected(Tab tab, FragmentTransaction ft) {
 	        ft.remove(fragment);
 	    }
+
+		@Override
+		public void onTabSelected(Tab arg0, FragmentTransaction ft) {
+			ft.add(R.id.fragment_container, fragment, null);
+			
+		}
 	}
+	
+
+
 	
 
 }
