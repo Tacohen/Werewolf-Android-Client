@@ -27,32 +27,36 @@ public final class R {
         public static final int ic_launcher=0x7f020000;
     }
     public static final class id {
-        public static final int action_settings=0x7f09001c;
-        public static final int emailText=0x7f090013;
-        public static final int emailTextEdit=0x7f090014;
-        public static final int fragment_container=0x7f090019;
+        public static final int action_settings=0x7f090020;
+        public static final int emailText=0x7f090017;
+        public static final int emailTextEdit=0x7f090018;
+        public static final int fragment_container=0x7f09001d;
         public static final int instructionText=0x7f090005;
-        public static final int isAliveText=0x7f09000f;
-        public static final int isNightText=0x7f090010;
-        public static final int killsText=0x7f090011;
+        public static final int isAliveText=0x7f090013;
+        public static final int isNightText=0x7f090014;
+        public static final int killButton=0x7f090010;
+        public static final int killRadiogroup=0x7f09000f;
+        public static final int killText=0x7f09000e;
+        public static final int killsText=0x7f090015;
         public static final int loginButton=0x7f09000a;
+        public static final int nightText=0x7f09000d;
         public static final int passwordText=0x7f090008;
         public static final int passwordTextEdit=0x7f090009;
-        public static final int passwordTextEditRegister=0x7f090015;
-        public static final int passwordTextEditRetype=0x7f090017;
-        public static final int passwordTextRetype=0x7f090016;
+        public static final int passwordTextEditRegister=0x7f090019;
+        public static final int passwordTextEditRetype=0x7f09001b;
+        public static final int passwordTextRetype=0x7f09001a;
         public static final int radiogroup=0x7f090002;
         public static final int registerButton=0x7f09000c;
-        public static final int registerButtonRegister=0x7f090018;
+        public static final int registerButtonRegister=0x7f09001c;
         public static final int registerText=0x7f09000b;
-        public static final int searchProgress=0x7f09001b;
-        public static final int statsText=0x7f09000d;
+        public static final int searchProgress=0x7f09001f;
+        public static final int statsText=0x7f090011;
         public static final int textView1=0x7f090000;
-        public static final int typeText=0x7f09000e;
+        public static final int typeText=0x7f090012;
         public static final int usernameText=0x7f090006;
         public static final int usernameTextEdit=0x7f090007;
-        public static final int usernameTextEditRegister=0x7f090012;
-        public static final int validatingText=0x7f09001a;
+        public static final int usernameTextEditRegister=0x7f090016;
+        public static final int validatingText=0x7f09001e;
         public static final int voteButton=0x7f090003;
         public static final int voteText=0x7f090001;
         public static final int welcomeText=0x7f090004;
@@ -60,10 +64,11 @@ public final class R {
     public static final class layout {
         public static final int activity_day=0x7f030000;
         public static final int activity_main=0x7f030001;
-        public static final int activity_play=0x7f030002;
-        public static final int activity_register=0x7f030003;
-        public static final int activity_tabsholder=0x7f030004;
-        public static final int activity_validate=0x7f030005;
+        public static final int activity_night=0x7f030002;
+        public static final int activity_play=0x7f030003;
+        public static final int activity_register=0x7f030004;
+        public static final int activity_tabsholder=0x7f030005;
+        public static final int activity_validate=0x7f030006;
     }
     public static final class menu {
         public static final int main=0x7f080000;

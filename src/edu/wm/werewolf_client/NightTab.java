@@ -1,12 +1,18 @@
 package edu.wm.werewolf_client;
 
+import java.util.ArrayList;
+
 import android.app.Fragment;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 public class NightTab extends Fragment{
@@ -14,12 +20,12 @@ public class NightTab extends Fragment{
 
 	
 	private String TAG = "Play";
-	private Boolean isAlive;
-	private Boolean isNight;
+	private Boolean isNight = false;
 	private Boolean isWerewolf = false;
 	public String password;
 	public String username;
-
+	public ArrayList<String> targets = new ArrayList<String>();
+	public Context context;
 
 	private int kills;
 	private final Handler myHandler = new Handler();
@@ -27,7 +33,7 @@ public class NightTab extends Fragment{
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 		      Bundle savedInstanceState) {
-		 View view = inflater.inflate(R.layout.activity_play,
+		 View view = inflater.inflate(R.layout.activity_night,
 			        container, false);
 		 
 		username = UsernameAndPassword.getUsername();
@@ -36,19 +42,28 @@ public class NightTab extends Fragment{
 		final GetAllAlive getAllAlive = new GetAllAlive();
 		final IsNight isNightInstance = new IsNight();
 		final isWerewolf isWerewolfInstance = new isWerewolf();
-	     
-	    
+		final KillAttempt kill = new KillAttempt();
+		
+		this.context = view.getContext();
 		
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				isAlive = getAllAlive.isSpecificPlayerAlive(username, username, password);
-				if (isAlive){
-					Log.i(TAG, username+" is alive");
+				isNight = isNightInstance.isNight(username, password);
+				if (isNight){
+					Log.i(TAG, "It is Night");
 				}
 				else{
-					Log.i(TAG, username+" is not alive");
+					Log.i(TAG, "It is Day");
 				}
+				AccessUI();
+			}
+		}).start();
+		
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				targets = kill.FindTargets();
 				AccessUI();
 			}
 		}).start();
@@ -67,88 +82,81 @@ public class NightTab extends Fragment{
 			}
 		}).start();
 		
-		
-		
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				isNight = isNightInstance.isNight(username, password);
-				if (isNight){
-					Log.i(TAG, "It is Night");
-				}
-				else{
-					Log.i(TAG, "It is Day");
-				}
-				AccessUI();
-			}
-		}).start();
-		
 		return view;
 	}
 	
-
-	private void UpdateUI(){
-		TextView isDeadText = (TextView) getView().findViewById(R.id.isAliveText);
-		isDeadText.setText("Is Alive: "+isAlive);
-		
-		TextView statsText = (TextView) getView().findViewById(R.id.statsText);
-		statsText.setText("Your Current Statistics");
-		
-		TextView nightText = (TextView) getView().findViewById(R.id.isNightText);
-		nightText.setText("Is It Night?   "+isNight);
-		
-		TextView werewolfText = (TextView) getView().findViewById(R.id.typeText);
-		werewolfText.setText("Is Werewolf?   "+isWerewolf);
-		
-		/**
-		if (isWerewolf.equals(null)){
-			//assume they are NOT a werewolf
-			TextView killsText = (TextView) getView().findViewById(R.id.killsText);
-			killsText.setVisibility(View.GONE);
-		}
-		else if (isWerewolf){
-			TextView killsText = (TextView) getView().findViewById(R.id.killsText);
-			killsText.setText("Number of kills:   "+kills);
-		}
-		else{
-			TextView killsText = (TextView) getView().findViewById(R.id.killsText);
-			killsText.setVisibility(View.GONE);
-		}
-		*/
-		
-		
-		if (isWerewolf){
-			TextView killsText = (TextView) getView().findViewById(R.id.killsText);
-			killsText.setText("Number of kills:   "+kills);
-		}
-		else{
-			TextView killsText = (TextView) getView().findViewById(R.id.killsText);
-			killsText.setVisibility(View.GONE);
-		}
-		
-	}
 	
+	private void UpdateUI(){
+		
+		if ((!isNight) && (isWerewolf)){
+			TextView killText = (TextView) getView().findViewById(R.id.killText);
+			killText.setText("It is day. You cannot kill now. Pretend to be a townsperson and vote");
+			
+			final RadioGroup rg = (RadioGroup) getView().findViewById(R.id.killRadiogroup);//not this RadioGroup rg = new RadioGroup(this);
+			rg.setVisibility(View.GONE);
+			
+			Button killButton = (Button) getView().findViewById(R.id.killButton);
+			killButton.setVisibility(View.GONE);
+		}
+		else if ((!isWerewolf) && (isNight)){
+			TextView killText = (TextView) getView().findViewById(R.id.killText);
+			killText.setText("You are not a Werewolf. You cannot kill, so please be safe until morning");
+			
+			final RadioGroup rg = (RadioGroup) getView().findViewById(R.id.killRadiogroup);//not this RadioGroup rg = new RadioGroup(this);
+			rg.setVisibility(View.GONE);
+			Button killButton = (Button) getView().findViewById(R.id.killButton);
+			killButton.setVisibility(View.GONE);
+			
+			
+		}else if ((!isWerewolf) && (!isNight)){
+			TextView killText = (TextView) getView().findViewById(R.id.killText);
+			killText.setText("It is day. Please go vote for whomever you think killed your fellow townspeople!");
+			
+			final RadioGroup rg = (RadioGroup) getView().findViewById(R.id.killRadiogroup);//not this RadioGroup rg = new RadioGroup(this);
+			rg.setVisibility(View.GONE);
+			
+			Button killButton = (Button) getView().findViewById(R.id.killButton);
+			killButton.setVisibility(View.GONE);
+			
+		}
+		else{
+			//If they are a werewolf and it's night...
+			Button killButton = (Button) getView().findViewById(R.id.killButton);
+			
+			if (targets.isEmpty()){
+				TextView killText = (TextView) getView().findViewById(R.id.killText);
+				killText.setText("There are no townspeople near you to kill. Go find some!");
+				killButton.setVisibility(View.GONE);
+			}
+			else{
+				//if there are people to kill
+				final RadioGroup rg = (RadioGroup) getView().findViewById(R.id.killRadiogroup);//not this RadioGroup rg = new RadioGroup(this);
+				rg.removeAllViews();//prevent duplicates
+				rg.setOrientation(RadioGroup.VERTICAL);
+				for(int i=0; i< targets.size(); i++)
+				{
+					RadioButton rb = new RadioButton(context);
+					rg.addView(rb); 
+					rb.setText(targets.get(i));
+				}
+				
+			}
+		}
+	}
+
 
 	final Runnable updateRunnable = new Runnable() {
-       public void run() {
-           //call the activity method that updates the UI
-           UpdateUI();
-       }
-   };
-   
-   private void AccessUI()
-   {
-        //update the UI using the handler and the runnable
-        myHandler.post(updateRunnable);
+	       public void run() {
+	           //call the activity method that updates the UI
+	           UpdateUI();
+	       }
+	   };
+	   
+	   private void AccessUI()
+	   {
+	        //update the UI using the handler and the runnable
+	        myHandler.post(updateRunnable);
 
-   }
-   
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
+	   }
+	
 }

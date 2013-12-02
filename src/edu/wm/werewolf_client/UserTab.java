@@ -36,6 +36,7 @@ public class UserTab extends Fragment{
 		final GetAllAlive getAllAlive = new GetAllAlive();
 		final IsNight isNightInstance = new IsNight();
 		final isWerewolf isWerewolfInstance = new isWerewolf();
+		final GetKills getKills = new GetKills(); 
 	     
 	    
 		
@@ -49,6 +50,14 @@ public class UserTab extends Fragment{
 				else{
 					Log.i(TAG, username+" is not alive");
 				}
+				AccessUI();
+			}
+		}).start();
+		
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				kills = getKills.getKills(username, password);
 				AccessUI();
 			}
 		}).start();

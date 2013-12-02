@@ -74,8 +74,15 @@ public class GetAllAlive {
 				JSONObject o = jObj.getJSONObject(playerNames.getString(i));
 				Player p = new Player(o.getString("id").replaceAll("^\"|\"$", ""),o.getBoolean("dead"),o.getDouble("lat"),o.getDouble("lng"),o.getInt("userID"),o.getBoolean("wereWolf"),o.getInt("voteCount"));
 				Log.i(TAG, "New player's name is: "+p.getId());
-				playersList.add(p);
+				if (p.getId().equals(username)){
+					Log.i(TAG, "Not adding player's own name");
+				}else{
+					playersList.add(p);
+				}
+				
 			}
+			
+
 
 			in.close();
 			String data = sb.toString();

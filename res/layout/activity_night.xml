@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/nightText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Nighttime Actions"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/killText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Players Close Enough To Kill"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <RadioGroup
+        android:id="@+id/killRadiogroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/killButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Kill!" />
+
+</LinearLayout>

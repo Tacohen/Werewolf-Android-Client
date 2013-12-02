@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class DayTab extends Fragment{
 	 
@@ -26,6 +27,7 @@ public class DayTab extends Fragment{
 	public ArrayList<Player> livingPlayers = new ArrayList<Player>();
 	public Context context;
 	public Vote voteInstance; 
+	public boolean voted;
 
 	private final Handler myHandler = new Handler();
 	
@@ -58,6 +60,7 @@ public class DayTab extends Fragment{
 			public void run() {
 				isNight = isNightInstance.isNight(username, password);
 				if (isNight){
+					voted = false;//reset
 					Log.i(TAG, "It is Night");
 				}
 				else{
@@ -85,7 +88,13 @@ public class DayTab extends Fragment{
 			TextView isDeadText = (TextView) getView().findViewById(R.id.voteText);
 			isDeadText.setText("It is daytime, you can vote now");
 			
-			if (!livingPlayers.isEmpty()){
+			if (voted){
+				isDeadText.setText("You already voted today");
+				Button voteButton = (Button) getView().findViewById(R.id.voteButton);
+     			voteButton.setVisibility(View.GONE);
+			}
+			
+			if ((!livingPlayers.isEmpty()) && (!voted)){
 				final RadioGroup rg = (RadioGroup) getView().findViewById(R.id.radiogroup);//not this RadioGroup rg = new RadioGroup(this);
 				rg.removeAllViews();//prevent duplicates
 				rg.setOrientation(RadioGroup.VERTICAL);
@@ -112,6 +121,10 @@ public class DayTab extends Fragment{
 		         				Log.i(TAG, "Voted for "+selectedPlayer);
 		         			}
 		         		}).start();
+		                Toast.makeText(context, "Thank you for voting! You can only vote once per day", Toast.LENGTH_LONG).show();
+	         			Button voteButton = (Button) getView().findViewById(R.id.voteButton);
+	         			voteButton.setVisibility(View.GONE);
+	         			voted = true;
 		             }
 		         });
 
