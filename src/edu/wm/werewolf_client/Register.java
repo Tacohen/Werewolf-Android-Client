@@ -14,7 +14,10 @@ import org.apache.http.message.BasicHeader;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -23,14 +26,18 @@ import android.widget.Toast;
 
 import com.loopj.android.http.*;
 
+import edu.wm.werewolf_client.FindLocation.LocationResult;
+
 public class Register extends Activity{
 	
-	Context context;
+	static Context context;
 	static String TAG = "Register";
 	String username;
 	String password;
 	String passwordRetyped;
 	String email;
+	double lat;
+	double lng;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +48,30 @@ public class Register extends Activity{
 		
 		Button registerButton = (Button)findViewById(R.id.registerButtonRegister);
 		registerButton.setOnClickListener(registerListener);
+		
+		LocationResult locationResult = new LocationResult(){
+			@Override
+			public void gotLocation(Location location){
+
+				if (location == null){
+					//If we failed to find the location for some reason, show the user an alert dialog
+					Log.w(TAG,"failed to get location!");
+				}
+				else{
+					//Got the location!
+					lat = (double) (location.getLatitude());
+					lng = (double) (location.getLongitude());
+
+					Log.v(TAG,"latitude is: "+lat);
+					Log.v(TAG,"longitude is: "+lng);
+
+
+				}
+			}
+
+		};
+		FindLocation myLocation = new FindLocation();
+		myLocation.getLocation(this, locationResult);
 	}
 	
 	View.OnClickListener registerListener = new View.OnClickListener() {
@@ -91,7 +122,7 @@ public class Register extends Activity{
 
 					            @Override
 					            public void run() {
-					            	makeRequest("http://powerful-depths-2851.herokuapp.com/users/register?username=",username,password);
+					            	makeRequest("http://powerful-depths-2851.herokuapp.com/users/register?username=",username,password,lat,lng);
 					            }
 					        }).start();
 							
@@ -107,20 +138,74 @@ public class Register extends Activity{
 			
 		};
 		
-		
-		public static HttpResponse makeRequest(String uri, String username, String password) {
+		/**
+		public static HttpResponse makeRequest(String uri, final String username, final String password, double lat, double lng) {
 		    try {
 		    	//tacohen note: login should be something like: /users/login?username=admin&lat=31&lng=30&password=123
 
 		    	HttpClient client = new DefaultHttpClient();
-		    	uri = uri+username+"&lat="+25+"&lng="+20+"&password="+password;
+		    	uri = uri+username+"&lat="+lat+"&lng="+lng+"&password="+password;
 		        HttpPost httpPost = new HttpPost(uri);
 		        httpPost.setHeader(new BasicHeader("Content-type", "application/json"));
 		        HttpResponse response = client.execute(httpPost);
 		        Log.i(TAG, "URI is: "+httpPost.getURI());
 		        StatusLine statusLine = response.getStatusLine();
 		        Log.i(TAG, "HTTP response code was: "+statusLine.toString());
+		        if (statusLine.toString().equals("HTTP/1.1 200 OK")){
+		        	Handler handler = new Handler(Looper.getMainLooper());
+		        	handler.post(new Runnable() {
+		        	    @Override
+		        	    public void run() {
+		        	        Intent intent = new Intent (context, MainInterface.class);
+		        	        intent.putExtra("username", username);
+		        	        intent.putExtra("password", password);
+		        	        startActivity(intent);
+		        	    }
+		        	});
+		        }
+		        else{
+		        	Log.e(TAG, "HTTP problem!");
+		        }
 		        
+		    } catch (UnsupportedEncodingException e) {
+		        e.printStackTrace();
+		    } catch (ClientProtocolException e) {
+		        e.printStackTrace();
+		    } catch (IOException e) {
+		        e.printStackTrace();
+		    }
+		    return null;
+		}*/
+		
+		public HttpResponse makeRequest(String uri, final String username, final String password,double lat,double lng) {
+		    try {
+		    	//tacohen note: login should be something like: /users/login?username=admin&lat=31&lng=30&password=123
+
+		    	HttpClient client = new DefaultHttpClient();
+		    	uri = uri+username+"&lat="+lat+"&lng="+lng+"&password="+password;
+		    	HttpPost httpPost = new HttpPost(uri);
+		        httpPost.setHeader(new BasicHeader("Content-type", "application/json"));
+		        HttpResponse response = client.execute(httpPost);
+		        Log.i(TAG, "URI is: "+httpPost.getURI());
+		        StatusLine statusLine = response.getStatusLine();
+		        Log.i(TAG, "HTTP response code was: "+statusLine.toString());
+		        if (statusLine.toString().equals("HTTP/1.1 200 OK")){
+		        	Handler handler = new Handler(Looper.getMainLooper());
+		        	handler.post(new Runnable() {
+		        	    @Override
+		        	    public void run() {
+		        	        Intent intent = new Intent (Register.this, MainInterface.class);
+		        	        intent.putExtra("username", username);
+		        	        intent.putExtra("password", password);
+		        	        startActivity(intent);
+		        	    }
+		        	});
+		        	//Validate v = new Validate();
+		        	//v.MoveToPlayScreen(username);
+		        }
+		        else{
+		        	Log.e(TAG, "HTTP problem!");
+		        }
 		    } catch (UnsupportedEncodingException e) {
 		        e.printStackTrace();
 		    } catch (ClientProtocolException e) {
