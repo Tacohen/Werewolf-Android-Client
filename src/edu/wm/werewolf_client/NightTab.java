@@ -91,6 +91,8 @@ public class NightTab extends Fragment{
 	
 	private void UpdateUI(){
 		
+		try{
+		
 		if ((!isNight) && (isWerewolf)){
 			TextView killText = (TextView) getView().findViewById(R.id.killText);
 			killText.setText("It is day. You cannot kill now. Pretend to be a townsperson and vote");
@@ -166,6 +168,9 @@ public class NightTab extends Fragment{
 				
 			}
 		}
+	}catch(NullPointerException e){
+		Log.e(TAG, "Null Pointer!");
+	}
 	}
 
 

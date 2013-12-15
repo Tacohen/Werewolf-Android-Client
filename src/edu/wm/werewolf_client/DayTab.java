@@ -76,65 +76,71 @@ public class DayTab extends Fragment{
 	
 
 	private void UpdateUI(){
-		
-		if ((isNight == null) || (isNight)){
-			TextView isDeadText = (TextView) getView().findViewById(R.id.voteText);
-			isDeadText.setText("It is night. You cannot vote now");
-			
-			Button voteButton = (Button) getView().findViewById(R.id.voteButton);
-			voteButton.setVisibility(View.GONE);
-		}
-		else{
-			TextView isDeadText = (TextView) getView().findViewById(R.id.voteText);
-			isDeadText.setText("It is daytime, you can vote now");
-			
-			if (voted){
-				isDeadText.setText("You already voted today");
-				Button voteButton = (Button) getView().findViewById(R.id.voteButton);
-     			voteButton.setVisibility(View.GONE);
-			}
-			
-			if ((!livingPlayers.isEmpty()) && (!voted)){
-				final RadioGroup rg = (RadioGroup) getView().findViewById(R.id.radiogroup);//not this RadioGroup rg = new RadioGroup(this);
-				rg.removeAllViews();//prevent duplicates
-				rg.setOrientation(RadioGroup.VERTICAL);
-				for(int i=0; i<livingPlayers.size(); i++)
-				{
-					RadioButton rb = new RadioButton(context);
-					rg.addView(rb); 
-					rb.setText(livingPlayers.get(i).getId());
-				}
-				
-				Button voteButton = (Button) getView().findViewById(R.id.voteButton);
-				voteButton.setOnClickListener(new View.OnClickListener() {
-		             public void onClick(View v) {
-		                 Log.i(TAG, "Vote Button Pressed!");
-		                 Log.i(TAG, "Result from button was: "+rg.getCheckedRadioButtonId());
-		                 // find the radiobutton by returned id
-		                 final Button selectedPlayerButton = (RadioButton) getView().findViewById(rg.getCheckedRadioButtonId());
-		                 final String selectedPlayer = selectedPlayerButton.getText().toString();
-		                 Log.i(TAG, "selected player was: "+selectedPlayer);
-		                 new Thread(new Runnable() {
-		         			@Override
-		         			public void run() {
-		         				voteInstance.vote(selectedPlayer);
-		         				Log.i(TAG, "Voted for "+selectedPlayer);
-		         			}
-		         		}).start();
-		                Toast.makeText(context, "Thank you for voting! You can only vote once per day", Toast.LENGTH_LONG).show();
-	         			Button voteButton = (Button) getView().findViewById(R.id.voteButton);
-	         			voteButton.setVisibility(View.GONE);
-	         			voted = true;
-	         			
-		             }
-		         });
 
+		try{
+
+			if ((isNight == null) || (isNight)){
+				TextView isDeadText = (TextView) getView().findViewById(R.id.voteText);
+				isDeadText.setText("It is night. You cannot vote now");
+
+				Button voteButton = (Button) getView().findViewById(R.id.voteButton);
+				voteButton.setVisibility(View.GONE);
 			}
+			else{
+				TextView isDeadText = (TextView) getView().findViewById(R.id.voteText);
+				isDeadText.setText("It is daytime, you can vote now");
+
+				if (voted){
+					isDeadText.setText("You already voted today");
+					Button voteButton = (Button) getView().findViewById(R.id.voteButton);
+					voteButton.setVisibility(View.GONE);
+				}
+
+				if ((!livingPlayers.isEmpty()) && (!voted)){
+					final RadioGroup rg = (RadioGroup) getView().findViewById(R.id.radiogroup);//not this RadioGroup rg = new RadioGroup(this);
+					rg.removeAllViews();//prevent duplicates
+					rg.setOrientation(RadioGroup.VERTICAL);
+					for(int i=0; i<livingPlayers.size(); i++)
+					{
+						RadioButton rb = new RadioButton(context);
+						rg.addView(rb); 
+						rb.setText(livingPlayers.get(i).getId());
+					}
+
+					Button voteButton = (Button) getView().findViewById(R.id.voteButton);
+					voteButton.setOnClickListener(new View.OnClickListener() {
+						public void onClick(View v) {
+							Log.i(TAG, "Vote Button Pressed!");
+							Log.i(TAG, "Result from button was: "+rg.getCheckedRadioButtonId());
+							// find the radiobutton by returned id
+							final Button selectedPlayerButton = (RadioButton) getView().findViewById(rg.getCheckedRadioButtonId());
+							final String selectedPlayer = selectedPlayerButton.getText().toString();
+							Log.i(TAG, "selected player was: "+selectedPlayer);
+							new Thread(new Runnable() {
+								@Override
+								public void run() {
+									voteInstance.vote(selectedPlayer);
+									Log.i(TAG, "Voted for "+selectedPlayer);
+								}
+							}).start();
+							Toast.makeText(context, "Thank you for voting! You can only vote once per day", Toast.LENGTH_LONG).show();
+							Button voteButton = (Button) getView().findViewById(R.id.voteButton);
+							voteButton.setVisibility(View.GONE);
+							voted = true;
+
+						}
+					});
+
+				}
+			}
+
+
+		}catch (NullPointerException e){
+			Log.e(TAG, "Null Pointer!");
 		}
-		
-		
+
 	}
-	
+
 
 	final Runnable updateRunnable = new Runnable() {
        public void run() {

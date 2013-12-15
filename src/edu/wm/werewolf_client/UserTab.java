@@ -1,13 +1,17 @@
 package edu.wm.werewolf_client;
 
 import android.app.Fragment;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Vibrator;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class UserTab extends Fragment{
 	 
@@ -19,6 +23,7 @@ public class UserTab extends Fragment{
 	private Boolean isWerewolf = false;
 	public String password;
 	public String username;
+	public Context context;
 
 
 	private int kills;
@@ -32,6 +37,8 @@ public class UserTab extends Fragment{
 		 
 		username = UsernameAndPassword.getUsername();
 		password = UsernameAndPassword.getPassword();
+		
+		this.context = view.getContext();
 		
 		final GetAllAlive getAllAlive = new GetAllAlive();
 		final IsNight isNightInstance = new IsNight();
@@ -101,6 +108,14 @@ public class UserTab extends Fragment{
 		try{
 			TextView isDeadText = (TextView) getView().findViewById(R.id.isAliveText);
 			isDeadText.setText("Is Alive: "+isAlive);
+		       if(!isAlive){
+					Vibrator v = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+					// Vibrate for 500 milliseconds
+					v.vibrate(500);
+					Toast.makeText(context, "You are dead. But thank you for playing!", Toast.LENGTH_LONG).show();
+
+				}
+			
 
 			TextView statsText = (TextView) getView().findViewById(R.id.statsText);
 			statsText.setText("Your Current Statistics");
@@ -128,6 +143,7 @@ public class UserTab extends Fragment{
 
 	final Runnable updateRunnable = new Runnable() {
         public void run() {
+        	
             //call the activity method that updates the UI
             UpdateUI();
         }
@@ -137,6 +153,7 @@ public class UserTab extends Fragment{
     {
          //update the UI using the handler and the runnable
          myHandler.post(updateRunnable);
+  
 
     }
     
